@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace="cn.com.product.mapper.ProductMapper">
+    	
+    	
+    	<select id="selectHotProduct" resultType="Product">
+    		select * from product where hot = 1 limit 10 
+    	</select>
+    	<select id="selectNewProduct" resultType="Product">
+    		select * from product order by date desc limit 10
+    	</select>
+    	<select id="selectProductByCaid"  parameterType="map" resultType="Product">
+    		select * from product where caid = #{ caid } limit #{ start },8
+    	</select>
+    	<select id="selectProductByCbid"  parameterType="map" resultType="Product">
+    		select * from product where cbid = #{ cbid } limit #{ start },8
+    	</select>
+    	<select id="selectProductByPid" parameterType="int" resultType="Product">
+    		select * from product where pid = #{ pid }
+    	</select>
+    	<select id="selectProductAPage" parameterType="int" resultType="Page">
+    		select count(*) as totalCount from product where caid = #{ caid }
+    	</select>
+    	<select id="selectProductBPage" parameterType="int" resultType="Page">
+    		select count(*) as totalCount from product where cbid = #{ cbid }
+    	</select>
+    	<select id="selectAllProducts" resultType="Product">
+    		select * from product
+    	</select>
+    	<delete id="deleteProductByPid" parameterType="int">
+    		delete from product where pid = #{ pid }
+    	</delete>
+    	<insert id="saveProduct" parameterType="Product">
+    		insert into product ( pname,market_price,shop_price,imagelocation,description,hot,date,caid,cbid )
+    			values
+    				( #{pname},#{market_price},#{shop_price},#{imagelocation},#{description},#{hot},#{date},#{caid},#{cbid} ) 
+    	</insert>
+    	<update id="editProduct" parameterType="Product">
+    		update product set 
+    			pname = #{pname},
+    			market_price = #{market_price},
+    			shop_price = #{shop_price},
+    			imagelocation = #{imagelocation},
+    			description = #{description},
+    			hot = #{hot},
+    			caid = #{caid},
+    			cbid = #{cbid}
+    		where pid = #{ pid }
+    	</update>
+    	<!-- 根据分页查询商品 -->
+    	<select id="selectPageProducts" parameterType="int" resultType="Product">
+    		select * from product limit #{ start },8
+    	</select>
+    	<!-- 分页查询，查询商品总数 -->
+    	<select id="selectProductPage" resultType="Page">
+    		select count(*) as totalCount from product
+        </select>
+        
+    </mapper>

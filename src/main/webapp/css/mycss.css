@@ -1,0 +1,27 @@
+@CHARSET "UTF-8";
+
+/* 注册内容格式不正确,红色字体提示 */
+span.checkfalse{
+	color: red;
+}
+
+/* 注册内容格式正确,绿色字体提示 */
+span.checktrue{
+	color: green;
+}
+
+/* 注册页面,必填内容之前的红色标记 */
+span.requiredField {
+	padding-right: 3px;
+	color: #ff6d6d;
+	font-size: 10px;
+}
+
+img.logo-image{
+	width: 150px;
+	height: 70px;
+}
+
+div.last .clearfix{
+	text-align: center;
+}

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+     http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+     http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+     http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
+     http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+     http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+     http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+	
+	
+	
+	<!-- 通过注解，将Service的生命周期纳入Spring的管理 -->
+	<context:annotation-config />
+	<context:component-scan base-package="cn.com.shopuser.service" />
+	<context:component-scan base-package="cn.com.cataloga.service" />
+	<context:component-scan base-package="cn.com.catalogb.service" />
+	<context:component-scan base-package="cn.com.product.service" />
+	<context:component-scan base-package="cn.com.order.service" />
+	<context:component-scan base-package="cn.com.adminuser.service" />
+	
+	<!-- 配置连接池 -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
+        <property name="driverClassName"> 
+            <value>com.mysql.jdbc.Driver</value> 
+        </property> 
+        <property name="url"> 
+            <value>jdbc:mysql://localhost:3306/ssmshop?characterEncoding=UTF-8</value> 
+        </property> 
+        <property name="username"> 
+            <value>root</value> 
+        </property> 
+        <property name="password"> 
+            <value>123</value> 
+        </property>  
+   </bean>
+     
+	<!-- 扫描xml配置文件 -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 别名 -->
+		<property name="typeAliasesPackage" 
+			value="cn.com.shopuser.pojo,cn.com.cataloga.pojo,cn.com.product.pojo,cn.com.catalogb.pojo,cn.com.utils,cn.com.order.pojo,cn.com.adminuser.pojo" />
+		<!-- 连接池 -->
+		<property name="dataSource" ref="dataSource"/>
+		<!-- sql语句 -->
+		<property name="mapperLocations" value="classpath:cn/com/*/mapper/*.xml"/>
+	</bean>
+	
+	<!-- 扫描mapper类 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    	<!-- 指定扫描的包，如果扫描多个包，中间使用半角逗号分隔 -->
+        <property name="basePackage" 
+        	value="cn.com.shopuser.mapper,cn.com.cataloga.mapper,cn.com.product.mapper,cn.com.catalogb.mapper,cn.com.order.mapper,cn.com.adminuser.mapper"/>
+    </bean>
+	
+	
+
+	
+	
+</beans>

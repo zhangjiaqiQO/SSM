@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+    <mapper namespace="cn.com.order.mapper.OrderMapper">
+    	
+    	
+    	<resultMap type="Order" id="OrderAndOrderItemAndProduct">
+			<id column="oid" property="oid" />
+			<result column="total" property="total" />
+			<result column="paystate" property="paystate" />
+     
+			<!-- 一对多 -->
+			<!-- property 指的是集合属性的值, ofType	指的是集合中元素的类型 -->
+			<!-- 把查询出的column的值赋值给ofType中的property -->
+			<collection property="products" ofType="Product">
+				<id column="pid" property="pid"/>
+				<result column="imagelocation" property="imagelocation" />
+				<result column="pname" property="pname" />
+				<result column="shop_price" property="shop_price" />
+				<result column="count" property="count" />
+				<result column="subtotal" property="subtotal" />
+			</collection>
+		</resultMap>
+    	
+    	<insert id="saveOrderItem" parameterType="OrderItem">
+    		insert into orderitem ( uid,count,subtotal,pid ) 
+            	values 
+            		(#{uid},#{count},#{subtotal},#{pid})
+    	</insert>
+    	<select id="selectAllOrderItemByUid" parameterType="int" resultType="OrderItem">
+    		select * from orderitem where uid = #{ uid } and oid is null
+    	</select>
+    	<delete id="removeOrderItem" parameterType="int">
+    		delete from orderitem where oiid = #{ oiid }
+    	</delete>
+    	<delete id="removeAllOrderItem" parameterType="int">
+    		delete from orderitem where uid = #{ uid }
+    	</delete>
+    	<select id="selectOrderItemByUidAndPid" parameterType="map" resultType="OrderItem">
+    		select * from orderitem where uid = #{ uid } and pid = #{ pid } and oid is null
+    	</select>
+    	<insert id="saveOrder" parameterType="Order" useGeneratedKeys="true" keyProperty="oid">
+			insert into `order` ( total,orderdate,paystate,address,telephone,uid ) 
+            	values 
+            		(#{total},#{orderdate},#{paystate},#{address},#{telephone},#{uid}) 
+    	</insert>
+    	<update id="updateOrderItem" parameterType="map">
+    		update orderitem set oid = #{ orderId } where oiid = #{ oiid };
+    	</update>
+    	
+    	<select id="selectOrderAndOrderItemAndProductByUid" parameterType="int" resultMap="OrderAndOrderItemAndProduct">
+    		select 
+    			o.oid as oid,o.total as total,o.paystate as paystate,p.pid as pid,p.imagelocation as imagelocation,p.pname as pname,p.shop_price as shop_price,oi.count as count,oi.subtotal as subtotal 
+    		from 
+    			`order` as o,orderitem as oi,product as p 
+    		where 
+    			o.oid=oi.oid and oi.pid=p.pid and o.uid=#{uid} and oi.uid=#{uid};
+    	</select>
+    	
+    	<select id="selectOrderAndOrderItemAndProduct" resultMap="OrderAndOrderItemAndProduct">
+    		select 
+    			o.oid as oid,o.total as total,o.paystate as paystate,p.pid as pid,p.imagelocation as imagelocation,p.pname as pname,p.shop_price as shop_price,oi.count as count,oi.subtotal as subtotal 
+    		from 
+    			`order` as o,orderitem as oi,product as p 
+    		where 
+    			o.oid=oi.oid and oi.pid=p.pid;
+    	</select>
+    	<select id="selectOrdersByState" parameterType="int" resultMap="OrderAndOrderItemAndProduct">
+    		select 
+    			o.oid as oid,o.total as total,o.paystate as paystate,p.pid as pid,p.imagelocation as imagelocation,p.pname as pname,p.shop_price as shop_price,oi.count as count,oi.subtotal as subtotal 
+    		from 
+    			`order` as o,orderitem as oi,product as p 
+    		where 
+    			o.oid=oi.oid and oi.pid=p.pid and o.paystate=#{ paystate };
+    	</select>
+    	
+    </mapper>
