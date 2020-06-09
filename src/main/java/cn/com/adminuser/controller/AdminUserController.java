@@ -160,7 +160,7 @@ public class AdminUserController {
 		
 	}
 	
-//	// 管理员退出登录
+	// 管理员退出登录
 //	@RequestMapping("adminUserQuit")
 //	public ModelAndView adminUserQuit( HttpServletRequest request ) {
 //		
